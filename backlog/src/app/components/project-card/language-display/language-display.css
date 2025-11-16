@@ -1,0 +1,14 @@
+:host {
+    display: grid;
+    grid-template-columns: 0.5fr 9.5fr;
+    grid-template-rows: 1fr;
+}
+
+.dot {
+    border: 1px solid blue;
+    background-color: blue;
+    height: 8px;
+    width: 8px;
+    border-radius: 100%;
+    align-self: center;
+}

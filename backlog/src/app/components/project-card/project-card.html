@@ -1,5 +1,5 @@
 <div class="card">
     <h2>{{ project().name }}</h2>
-    <p>{{ project().language }}</p>
+    <app-language-display [language]="project().language"></app-language-display>
     <p>{{ project().description }}</p>
 </div>
