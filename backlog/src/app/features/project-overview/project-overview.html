@@ -1,1 +1,9 @@
-<p>project-overview works!</p>
+<button matFab extended>
+    <mat-icon>folder</mat-icon>
+    Add project
+</button>
+<div class="projects"> 
+    @for (project of projects; track $index) {
+        <app-project-card [project]="project"></app-project-card>
+    }
+</div>
