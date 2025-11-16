@@ -1,2 +1,6 @@
-<div class="dot"></div>
+<div 
+    class="dot"
+    [style.background-color]="textToColor(language())"
+    [style.border-color]="textToColor(language())">
+</div>
 <p>{{ language() }}</p>
