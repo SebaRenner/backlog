@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
-import { Project } from '../../models/project.model';
 import { LanguageDisplay } from './language-display/language-display';
+import { GitHubRepository } from '../../models/github.model';
 
 @Component({
   selector: 'app-project-card',
@@ -9,5 +9,5 @@ import { LanguageDisplay } from './language-display/language-display';
   styleUrl: './project-card.css',
 })
 export class ProjectCard {
-  project = input.required<Project>()
+  project = input.required<GitHubRepository>()
 }

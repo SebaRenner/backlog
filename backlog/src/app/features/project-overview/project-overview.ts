@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectCard } from '../../components/project-card/project-card';
-import { Project } from '../../models/project.model';
+import { GitHubService } from '../../services/github.service';
+import { GitHubRepository } from '../../models/github.model';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-project-overview',
@@ -11,14 +13,9 @@ import { Project } from '../../models/project.model';
   styleUrl: './project-overview.css',
 })
 export class ProjectOverview {
-    projects: Project[] = [{
-      name: 'ngx-interceptors',
-      language: 'TypeScript',
-      description: 'Library with common HTTP Interceptors for Angular Applications'
-    }, 
-    {
-      name: 'quantum-random',
-      language: 'Q#',
-      description: 'Simple stupid random number generator using Q#.'
-    }];
+    projects: GitHubRepository[] = [];
+
+    constructor(githubService: GitHubService) {
+      githubService.getAllRepos().pipe(take((1))).subscribe((repos => this.projects = repos));
+    }
 }
