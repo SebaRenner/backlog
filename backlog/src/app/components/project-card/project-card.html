@@ -1,5 +1,8 @@
 <div class="card">
     <h2>{{ project().name }}</h2>
-    <app-language-display [language]="project().language"></app-language-display>
+    @let lang = project().language;
+    @if (lang) {
+        <app-language-display [language]="lang"></app-language-display>
+    }
     <p>{{ project().description }}</p>
 </div>
