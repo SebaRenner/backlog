@@ -16,9 +16,6 @@ export const ProjectStore = signalStore(
   withMethods((store) => ({
     setProjects(projects: GitHubRepository[]) {
       patchState(store, { projects });
-    },
-    getById(id: number): GitHubRepository | undefined {
-        return store.projects().find(p => p.id === id)
     }
   }))
 );
