@@ -4,7 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { ProjectCard } from '../../components/project-card/project-card';
 import { GitHubService } from '../../services/github.service';
 import { GitHubRepository } from '../../models/github.model';
-import { take } from 'rxjs';
+import { catchError, of, take } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-project-overview',
@@ -13,9 +14,26 @@ import { take } from 'rxjs';
   styleUrl: './project-overview.css',
 })
 export class ProjectOverview {
-    projects: GitHubRepository[] = [];
+  projects: GitHubRepository[] = [];
 
-    constructor(githubService: GitHubService) {
-      githubService.getAllRepos().pipe(take((1))).subscribe((repos => this.projects = repos));
-    }
+  constructor(
+    githubService: GitHubService,
+    snackBar: MatSnackBar
+  ) {
+    githubService
+      .getAllRepos()
+      .pipe(
+        take(1),
+        catchError((err) => {
+          snackBar.open(
+            'Github API call failed. Did you configure the PAT Token? 👀',
+            'Close',
+            { duration: 8000 }
+          );
+          console.error('GitHub error:', err);
+          return of([]);
+        })
+      )
+      .subscribe((repos) => (this.projects = repos));
+  }
 }
