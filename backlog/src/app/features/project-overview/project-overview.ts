@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectCard } from '../../components/project-card/project-card';
@@ -6,6 +6,8 @@ import { GitHubService } from '../../services/github.service';
 import { GitHubRepository } from '../../models/github.model';
 import { catchError, of, take } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { ProjectStore } from '../../store/project.store';
 
 @Component({
   selector: 'app-project-overview',
@@ -13,8 +15,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './project-overview.html',
   styleUrl: './project-overview.css',
 })
-export class ProjectOverview {
-  projects: GitHubRepository[] = [];
+export class ProjectOverview {  
+  private readonly router = inject(Router);
+  private readonly projectStore = inject(ProjectStore);
+  
+  projects = this.projectStore.projects;
 
   constructor(
     githubService: GitHubService,
@@ -34,6 +39,10 @@ export class ProjectOverview {
           return of([]);
         })
       )
-      .subscribe((repos) => (this.projects = repos));
+      .subscribe((repos) => (this.projectStore.setProjects(repos)));
+  }
+
+  openProject(project: GitHubRepository) {
+    this.router.navigate(['board', project.id]);
   }
 }
