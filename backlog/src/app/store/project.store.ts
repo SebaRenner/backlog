@@ -1,6 +1,5 @@
-import { computed } from "@angular/core";
 import { GitHubRepository } from "../models/github.model";
-import { patchState, signalStore, withComputed, withMethods, withState } from "@ngrx/signals";
+import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 
 type ProjectState = {
   projects: GitHubRepository[];
