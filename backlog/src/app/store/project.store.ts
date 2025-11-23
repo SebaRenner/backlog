@@ -24,9 +24,6 @@ export const ProjectStore = signalStore(
   { providedIn: "root" },
   withState(initialState),
   withMethods((store, githubService = inject(GitHubService), snackBar = inject(MatSnackBar)) => ({
-    setProjects(projects: GitHubRepository[]) {
-      patchState(store, { projects, loaded: true, loading: false });
-    },
     setSelectedProject(projectId: number) {
       patchState(store, { 
         selectedProject: store.projects().find(p => p.id === projectId) 
