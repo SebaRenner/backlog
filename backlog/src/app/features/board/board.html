@@ -1,13 +1,16 @@
-@if (project) {
-<div class="board">
+@if (projectStore.loading()) {
+  <div class="loading">Loading project...</div>
+}
+@else if (projectStore.selectedProject(); as project) {
+  <div class="board">
     <h1>{{ project.name }}</h1>
     <div class="swimlanes">
-        @for (lane of swimlanes; track $index) {
-            <app-swimlane [name]="lane"></app-swimlane>
-        }
+      @for (lane of swimlanes; track $index) {
+        <app-swimlane [name]="lane"></app-swimlane>
+      }
     </div>
-</div>
+  </div>
 }
 @else {
-    {{ 'Nothing to see here' }}
+  {{ 'Nothing to see here' }}
 }

@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GitHubRepository } from '../../models/github.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ProjectStore } from '../../store/project.store';
 import { Swimlane } from '../../components/swimlane/swimlane';
+import { combineLatest, filter } from 'rxjs';
 
 @Component({
   selector: 'app-board',
@@ -12,16 +12,21 @@ import { Swimlane } from '../../components/swimlane/swimlane';
   styleUrl: './board.css',
 })
 export class Board {
-  project: GitHubRepository | undefined;
-
   readonly swimlanes = ['New', 'Next Up', 'In Progress', 'Review', 'Done'];
-
-  private readonly projectStore = inject(ProjectStore);
+  readonly projectStore = inject(ProjectStore);
 
   constructor(route: ActivatedRoute) {
-    route.params.pipe(takeUntilDestroyed()).subscribe((params) => {
+    this.projectStore.loadProjects();
+    
+    combineLatest([
+      route.params,
+      toObservable(this.projectStore.loaded)
+    ]).pipe(
+      takeUntilDestroyed(),
+      filter(([_, loaded]) => loaded)
+    ).subscribe(([params, _]) => {
       const projectId = params['projectId'];
-      this.project = this.projectStore.projects().find(p => p.id == projectId);
-    })
+      this.projectStore.setSelectedProject(+projectId);
+    });
   }
 }
