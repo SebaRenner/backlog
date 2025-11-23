@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { GitHubRepository } from "../models/github.model";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import { pipe, switchMap, tap, catchError, of, filter } from "rxjs";
+import { pipe, switchMap, tap, catchError, filter, EMPTY } from "rxjs";
 import { GitHubService } from "../services/github.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
@@ -54,7 +54,7 @@ export const ProjectStore = signalStore(
               );
               console.error('GitHub error:', err);
               patchState(store, { loading: false });
-              return of([]);
+              return EMPTY;
             })
           )
         )
