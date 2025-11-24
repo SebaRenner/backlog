@@ -1,3 +1,5 @@
-<div class="work-item">
+<div class="work-item"
+    [class.bug]="item().type === itemType.Bug"
+    [class.feature]="item().type === itemType.Feature">
     <div class="title">{{ item().title }}</div>
 </div>

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { WorkItem } from '../../models/board.model';
+import { WorkItem, WorkItemType } from '../../models/board.model';
 
 @Component({
   selector: 'app-work-item-display',
@@ -8,5 +8,7 @@ import { WorkItem } from '../../models/board.model';
   styleUrl: './work-item-display.css',
 })
 export class WorkItemDisplay {
+  readonly itemType = WorkItemType;
+
   item = input.required<WorkItem>();
 }

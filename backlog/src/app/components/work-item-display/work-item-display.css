@@ -14,3 +14,12 @@
 .title {
     font-weight: 500;
 }
+
+.feature {
+    background-color: lightblue;
+}
+
+.bug {
+    background-color: red;
+    color: white;
+}
