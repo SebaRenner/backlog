@@ -1,2 +1,6 @@
-<h3>{{ name() }}</h3>
-<div class="swimlane"></div>
+<h3>{{ model().name }}</h3>
+<div class="swimlane">
+    @for (item of model().workItems; track $index) {
+        <app-work-item-display [item]="item"></app-work-item-display>
+    }
+</div>

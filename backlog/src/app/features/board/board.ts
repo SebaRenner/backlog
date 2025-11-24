@@ -5,6 +5,7 @@ import { ProjectStore } from '../../store/project.store';
 import { Swimlane } from '../../components/swimlane/swimlane';
 import { combineLatest, filter } from 'rxjs';
 import { Spinner } from '../../components/spinner/spinner';
+import { SwimlaneModel, WorkItemType } from '../../models/board.model';
 
 @Component({
   selector: 'app-board',
@@ -13,7 +14,24 @@ import { Spinner } from '../../components/spinner/spinner';
   styleUrl: './board.css',
 })
 export class Board {
-  readonly swimlanes = ['New', 'Next Up', 'In Progress', 'Review', 'Done'];
+  readonly swimlanes: SwimlaneModel[] = [{
+    name: 'New',
+    workItems: [{
+      title: 'Add workitem component',
+      type: WorkItemType.Feature
+    },
+    {
+      title: 'Test Bug',
+      type: WorkItemType.Bug
+    }]},
+  {
+    name: 'In Progress',
+    workItems: []
+  },
+  {
+    name: 'Done',
+    workItems: []
+  }];
   readonly projectStore = inject(ProjectStore);
 
   constructor(route: ActivatedRoute) {

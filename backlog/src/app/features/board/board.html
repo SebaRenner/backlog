@@ -6,7 +6,7 @@
     <h1>{{ project.name }}</h1>
     <div class="swimlanes">
       @for (lane of swimlanes; track $index) {
-        <app-swimlane [name]="lane"></app-swimlane>
+        <app-swimlane [model]="lane"></app-swimlane>
       }
     </div>
   </div>
