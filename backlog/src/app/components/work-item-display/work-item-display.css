@@ -1,5 +1,16 @@
 .work-item {
     border: 1px solid black;
     border-radius: 4px;
-    height: 32px;
+    height: 48px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    padding: 6px 6px 6px 10px;
+}
+
+.work-item:hover {
+    cursor: pointer;
+}
+
+.title {
+    font-weight: 500;
 }
