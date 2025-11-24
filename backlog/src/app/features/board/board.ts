@@ -4,10 +4,11 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ProjectStore } from '../../store/project.store';
 import { Swimlane } from '../../components/swimlane/swimlane';
 import { combineLatest, filter } from 'rxjs';
+import { Spinner } from '../../components/spinner/spinner';
 
 @Component({
   selector: 'app-board',
-  imports: [Swimlane],
+  imports: [Swimlane, Spinner],
   templateUrl: './board.html',
   styleUrl: './board.css',
 })

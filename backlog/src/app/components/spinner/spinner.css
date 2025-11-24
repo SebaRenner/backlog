@@ -1,0 +1,20 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #ccc;
+    border-top-color: #3f51b5;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

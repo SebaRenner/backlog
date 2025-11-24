@@ -1,5 +1,5 @@
 @if (projectStore.loading()) {
-  <div class="loading">Loading project...</div>
+  <app-spinner></app-spinner>
 }
 @else if (projectStore.selectedProject(); as project) {
   <div class="board">
