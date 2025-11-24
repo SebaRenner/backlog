@@ -1,6 +1,9 @@
 <h3>{{ model().name }}</h3>
-<div class="swimlane">
+<div class="swimlane" 
+     cdkDropList
+     [cdkDropListData]="model().workItems"
+     (cdkDropListDropped)="onDrop($event)">
     @for (item of model().workItems; track $index) {
-        <app-work-item-display [item]="item"></app-work-item-display>
+        <app-work-item-display [item]="item" cdkDrag></app-work-item-display>
     }
 </div>
