@@ -6,7 +6,12 @@
     <h1>{{ project.name }}</h1>
     <div class="swimlanes">
       @for (lane of swimlanes; track $index) {
-        <app-swimlane [model]="lane"></app-swimlane>
+        <app-swimlane 
+          [lane]="lane" 
+          [laneId]="'lane-' + $index"
+          [connectedTo]="getConnectedLanes($index)"
+          (drop)="onDrop($event)">
+        </app-swimlane>
       }
     </div>
   </div>

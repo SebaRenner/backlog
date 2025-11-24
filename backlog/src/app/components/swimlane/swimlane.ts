@@ -1,7 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { SwimlaneModel } from '../../models/board.model';
 import { WorkItemDisplay } from '../work-item-display/work-item-display';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-swimlane',
@@ -10,9 +10,12 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   styleUrl: './swimlane.css',
 })
 export class Swimlane {
-    model = input.required<SwimlaneModel>();
+    lane = input.required<SwimlaneModel>();
+    laneId = input.required<string>();
+    connectedTo = input<string[]>([]);
+    drop = output<CdkDragDrop<SwimlaneModel>>();
 
-    onDrop(event: unknown) {
-      console.log(event);
+    onDrop(event: CdkDragDrop<SwimlaneModel>) {
+      this.drop.emit(event);
     }
 }

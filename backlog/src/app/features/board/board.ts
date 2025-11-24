@@ -6,6 +6,7 @@ import { Swimlane } from '../../components/swimlane/swimlane';
 import { combineLatest, filter } from 'rxjs';
 import { Spinner } from '../../components/spinner/spinner';
 import { SwimlaneModel, WorkItemType } from '../../models/board.model';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-board',
@@ -14,6 +15,7 @@ import { SwimlaneModel, WorkItemType } from '../../models/board.model';
   styleUrl: './board.css',
 })
 export class Board {
+  readonly projectStore = inject(ProjectStore);
   readonly swimlanes: SwimlaneModel[] = [{
     name: 'New',
     workItems: [{
@@ -32,7 +34,6 @@ export class Board {
     name: 'Done',
     workItems: []
   }];
-  readonly projectStore = inject(ProjectStore);
 
   constructor(route: ActivatedRoute) {
     this.projectStore.loadProjects();
@@ -47,5 +48,30 @@ export class Board {
       const projectId = params['projectId'];
       this.projectStore.setSelectedProject(+projectId);
     });
+  }
+
+  getConnectedLanes(currentIndex: number): string[] {
+    return this.swimlanes
+      .map((_, index) => `lane-${index}`)
+      .filter((_, index) => index !== currentIndex);
+  }
+
+  onDrop(event: CdkDragDrop<SwimlaneModel>) {
+    if (event.previousContainer === event.container) {
+      // Reorder within the same swimlane
+      moveItemInArray(
+        event.container.data.workItems,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      // Transfer between swimlanes
+      transferArrayItem(
+        event.previousContainer.data.workItems,
+        event.container.data.workItems,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
   }
 }
