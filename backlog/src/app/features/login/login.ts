@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class Login {
   form: FormGroup;
 
+  private readonly router = inject(Router);
+
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       password: ['', Validators.required]
@@ -21,7 +24,7 @@ export class Login {
 
   onSubmit() {
     if (this.form.valid) {
-      console.log(this.form.value);
+      this.router.navigate(['']);
     }
   }
 }
