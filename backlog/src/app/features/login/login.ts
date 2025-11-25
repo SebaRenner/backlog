@@ -23,13 +23,16 @@ export class Login {
     });
   }
 
+  get passwordControl() {
+    return this.form.controls['password'];
+  }
+
   onSubmit() {
     if (this.form.valid) {
       if (this.form.value.password === environment.appPassword) {
         this.router.navigate(['']);
       } else {
-        const passwordControl = this.form.controls['password'];
-        passwordControl.setErrors({ wrongPassword: true });
+        this.passwordControl.setErrors({ wrongPassword: true });
       }
     }
   }

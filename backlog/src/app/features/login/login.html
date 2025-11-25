@@ -7,7 +7,7 @@
       type="password"
       formControlName="password"
       required>
-    @if (form.controls['password'].hasError('wrongPassword')) {
+    @if (passwordControl.hasError('wrongPassword')) {
         <mat-error>
             Incorrect password
         </mat-error>
