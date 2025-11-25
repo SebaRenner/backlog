@@ -7,6 +7,11 @@
       type="password"
       formControlName="password"
       required>
+    @if (form.controls['password'].hasError('wrongPassword')) {
+        <mat-error>
+            Incorrect password
+        </mat-error>
+    }
   </mat-form-field>
 
   <button mat-raised-button color="primary" [disabled]="form.invalid">

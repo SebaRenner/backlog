@@ -13,7 +13,7 @@ import { environment } from '../../environments/environment';
   styleUrl: './login.css',
 })
 export class Login {
-  form: FormGroup;
+  readonly form: FormGroup;
 
   private readonly router = inject(Router);
 
@@ -27,6 +27,9 @@ export class Login {
     if (this.form.valid) {
       if (this.form.value.password === environment.appPassword) {
         this.router.navigate(['']);
+      } else {
+        const passwordControl = this.form.controls['password'];
+        passwordControl.setErrors({ wrongPassword: true });
       }
     }
   }
