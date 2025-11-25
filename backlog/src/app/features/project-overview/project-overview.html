@@ -1,7 +1,4 @@
-<button matFab extended>
-    <mat-icon>folder</mat-icon>
-    Add project
-</button>
+<h1>All your Projects</h1>
 <div class="projects"> 
     @for (project of projects(); track $index) {
         <app-project-card [project]="project" (click)="openProject(project)"></app-project-card>
