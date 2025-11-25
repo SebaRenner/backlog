@@ -10,6 +10,7 @@ export interface GitHubRepository {
     private: boolean;
     size: number;
     stargazers_count: number;
+    updated_at: Date;
     visibility: GithubRepoVisibility;
 }
 

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ProjectCard } from '../../components/project-card/project-card';
 import { GitHubRepository } from '../../models/github.model';
 import { Router } from '@angular/router';
@@ -14,7 +14,10 @@ export class ProjectOverview {
   private readonly router = inject(Router);
   private readonly projectStore = inject(ProjectStore);
   
-  projects = this.projectStore.projects;
+  projects = computed(() => 
+    [...this.projectStore.projects()]
+      .sort((a, b) => b.updated_at > a.updated_at ? 1 : -1)
+  );
 
   constructor() {
     this.projectStore.loadProjects();
