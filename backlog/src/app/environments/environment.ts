@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  githubToken: '<PAT>'
+  githubToken: '<PAT>',
+  appPassword: '<YOUR_PW>'
 }
