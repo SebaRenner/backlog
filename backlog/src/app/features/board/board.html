@@ -3,7 +3,15 @@
 }
 @else if (projectStore.selectedProject(); as project) {
   <div class="board">
-    <h1>{{ project.name }}</h1>
+    <div class="header">
+      <h1>{{ project.name }}</h1>
+      <button matFab extended 
+        class="back-button" 
+        (click)="toOverview()">
+        <mat-icon>folder</mat-icon>
+        Back to Overview
+      </button>
+    </div>
     <div class="swimlanes">
       @for (lane of swimlanes; track $index) {
         <app-swimlane 

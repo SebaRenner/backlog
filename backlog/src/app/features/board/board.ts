@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ProjectStore } from '../../store/project.store';
 import { Swimlane } from '../../components/swimlane/swimlane';
@@ -7,15 +7,18 @@ import { combineLatest, filter } from 'rxjs';
 import { Spinner } from '../../components/spinner/spinner';
 import { SwimlaneModel, WorkItemType } from '../../models/board.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-board',
-  imports: [Swimlane, Spinner],
+  imports: [Swimlane, Spinner, MatButtonModule, MatIconModule],
   templateUrl: './board.html',
   styleUrl: './board.css',
 })
 export class Board {
   readonly projectStore = inject(ProjectStore);
+  readonly router = inject(Router);
   readonly swimlanes: SwimlaneModel[] = [{
     name: 'New',
     workItems: [{
@@ -73,5 +76,9 @@ export class Board {
         event.currentIndex
       );
     }
+  }
+
+  toOverview() {
+    this.router.navigate(['']);
   }
 }

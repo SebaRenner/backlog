@@ -2,6 +2,14 @@
     padding: 20px;
 }
 
+.header {
+    display: flex;
+
+    .back-button {
+        margin-left: auto;
+    }
+}
+
 .swimlanes {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
