@@ -21,7 +21,7 @@ const initialState: ProjectState = {
 };
 
 export const ProjectStore = signalStore(
-  { providedIn: "root" },
+  { providedIn: 'root' },
   withState(initialState),
   withMethods((store, githubService = inject(GitHubService), snackBar = inject(MatSnackBar)) => ({
     setSelectedProject(projectId: number) {

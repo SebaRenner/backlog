@@ -5,9 +5,22 @@
     padding: 32px;
 }
 
-h1 {
-    text-align: center;
+.header {
+  display: flex;
+  align-items: center;
 }
+
+.header h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+.header button {
+  margin-left: auto;
+}
+
 
 .projects {
     display: grid;

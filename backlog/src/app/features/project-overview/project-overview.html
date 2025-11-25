@@ -1,4 +1,12 @@
-<h1>All your Projects</h1>
+<div class="header">
+    <h1>All your Projects</h1>
+    <button matFab extended 
+        class="back-button" 
+        (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+    </button>
+</div>
 <div class="projects"> 
     @for (project of projects(); track $index) {
         <app-project-card [project]="project" (click)="openProject(project)"></app-project-card>

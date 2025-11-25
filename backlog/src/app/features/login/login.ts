@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { LoginStore } from '../../store/login.store';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class Login {
   readonly form: FormGroup;
 
   private readonly router = inject(Router);
+  private readonly loginStore = inject(LoginStore);
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -30,6 +32,7 @@ export class Login {
   onSubmit() {
     if (this.form.valid) {
       if (this.form.value.password === environment.appPassword) {
+        this.loginStore.login();
         this.router.navigate(['']);
       } else {
         this.passwordControl.setErrors({ wrongPassword: true });
