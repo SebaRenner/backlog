@@ -1,6 +1,8 @@
+import { inject } from "@angular/core";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
+import { CachingService } from "../services/caching.service";
 
-type LoginState = {
+export type LoginState = {
     loggedIn: boolean;
 }
 
@@ -10,13 +12,20 @@ const initialState: LoginState = {
 
 export const LoginStore = signalStore(
   { providedIn: 'root' },
-  withState(initialState),
-  withMethods((store) => ({
+  withState(() => {
+    const cachingService = inject(CachingService);
+    return cachingService.getLoginState() ?? initialState;
+  }),
+  withMethods((store, cachingService = inject(CachingService)) => ({
     login() {
-        patchState(store, { loggedIn: true })
+        const state: LoginState = { loggedIn: true };
+        patchState(store, state)
+        cachingService.saveLoginState(state)
     },
     logout() {
-        patchState(store, { loggedIn: false })
+        const state: LoginState = { loggedIn: false };
+        patchState(store, state)
+        cachingService.saveLoginState(state);
     }
   }))    
 )
