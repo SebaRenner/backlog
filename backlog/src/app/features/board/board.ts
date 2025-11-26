@@ -9,6 +9,7 @@ import { SwimlaneModel, WorkItemType } from '../../models/board.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
   selector: 'app-board',
@@ -18,7 +19,6 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class Board {
   readonly projectStore = inject(ProjectStore);
-  readonly router = inject(Router);
   readonly swimlanes: SwimlaneModel[] = [{
     name: 'New',
     workItems: [{
@@ -37,10 +37,13 @@ export class Board {
     name: 'Done',
     workItems: []
   }];
+  
+  private readonly router = inject(Router);
+  private readonly supabaseService = inject(SupabaseService);
 
   constructor(route: ActivatedRoute) {
     this.projectStore.loadProjects();
-    
+
     combineLatest([
       route.params,
       toObservable(this.projectStore.loaded)
