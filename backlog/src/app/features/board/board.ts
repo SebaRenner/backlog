@@ -53,6 +53,7 @@ export class Board {
     ).subscribe(([params, _]) => {
       const projectId = params['projectId'];
       this.projectStore.setSelectedProject(+projectId);
+      this.supabaseService.getWorkItemsById(+projectId).then((res) => console.log(res));
     });
   }
 
