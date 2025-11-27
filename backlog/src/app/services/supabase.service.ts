@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from "../environments/environment";
+import { catchError, from, map, Observable, throwError } from "rxjs";
+import { WorkItem } from "../models/board.model";
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
@@ -20,17 +22,17 @@ export class SupabaseService {
         );
     }
 
-    async getWorkItemsById(projectId: number) {
-        const { data, error } = await this.client
-            .from('workitems')
-            .select('*')
-            .eq('project_id', projectId);
-
-        if (error) {
-            console.error('Error fetching work items:', error);
-            throw error;
-        }
-
-        return data;
+    getWorkItemsById(projectId: number): Observable<WorkItem[]> {
+        return from(
+            this.client
+                .from('workitems')
+                .select('*')
+                .eq('project_id', projectId)
+        ).pipe(
+            map(({ data, error }) => {
+                if (error) throw error;
+                return data || [];
+            })
+        );
     }
 }

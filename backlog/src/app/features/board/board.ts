@@ -21,14 +21,8 @@ export class Board {
   readonly projectStore = inject(ProjectStore);
   readonly swimlanes: SwimlaneModel[] = [{
     name: 'New',
-    workItems: [{
-      title: 'Add workitem component',
-      type: WorkItemType.Feature
-    },
-    {
-      title: 'Test Bug',
-      type: WorkItemType.Bug
-    }]},
+    workItems: []
+  },
   {
     name: 'In Progress',
     workItems: []
@@ -53,7 +47,9 @@ export class Board {
     ).subscribe(([params, _]) => {
       const projectId = params['projectId'];
       this.projectStore.setSelectedProject(+projectId);
-      this.supabaseService.getWorkItemsById(+projectId).then((res) => console.log(res));
+      this.supabaseService.getWorkItemsById(+projectId).subscribe((res) => {
+        this.swimlanes[0].workItems = res;
+      });
     });
   }
 
