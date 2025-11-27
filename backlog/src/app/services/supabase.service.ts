@@ -48,5 +48,6 @@ export class SupabaseService {
                 if (error) throw error;
                 return data;
             })
+        );
     }
 }

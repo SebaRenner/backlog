@@ -48,7 +48,9 @@ export class Board {
       const projectId = params['projectId'];
       this.projectStore.setSelectedProject(+projectId);
       this.supabaseService.getWorkItemsById(+projectId).subscribe((res) => {
-        this.swimlanes[0].workItems = res;
+        res.map((workItem) => {
+          this.swimlanes[workItem.status].workItems.push(workItem);
+        })
       });
     });
   }
@@ -81,4 +83,6 @@ export class Board {
   toOverview() {
     this.router.navigate(['']);
   }
+
+
 }
