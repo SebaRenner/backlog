@@ -61,7 +61,7 @@ export class Board {
       .filter((_, index) => index !== currentIndex);
   }
 
-  onDrop(event: CdkDragDrop<SwimlaneModel>) {
+  onDrop(event: CdkDragDrop<SwimlaneModel>, newLaneIndex: number) {
     if (event.previousContainer === event.container) {
       // Reorder within the same swimlane
       moveItemInArray(
@@ -77,6 +77,11 @@ export class Board {
         event.previousIndex,
         event.currentIndex
       );
+      
+      const movedWorkItem = event.container.data.workItems[event.currentIndex];
+      movedWorkItem.status = newLaneIndex;
+
+      this.supabaseService.saveWorkItem(movedWorkItem).subscribe();
     }
   }
 

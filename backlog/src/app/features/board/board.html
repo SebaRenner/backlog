@@ -18,7 +18,7 @@
           [lane]="lane" 
           [laneId]="'lane-' + $index"
           [connectedTo]="getConnectedLanes($index)"
-          (drop)="onDrop($event)">
+          (drop)="onDrop($event, $index)">
         </app-swimlane>
       }
     </div>
