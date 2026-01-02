@@ -9,6 +9,7 @@ export interface WorkItem {
     type: WorkItemType;
     status: number;
     project_id: number;  // TODO: Split off database model from app model
+    order: number;
 }
 
 export enum WorkItemType {

@@ -5,7 +5,7 @@ import { ProjectStore } from '../../store/project.store';
 import { Swimlane } from '../../components/swimlane/swimlane';
 import { combineLatest, filter } from 'rxjs';
 import { Spinner } from '../../components/spinner/spinner';
-import { SwimlaneModel, WorkItemType } from '../../models/board.model';
+import { SwimlaneModel } from '../../models/board.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -88,6 +88,4 @@ export class Board {
   toOverview() {
     this.router.navigate(['']);
   }
-
-
 }
