@@ -19,18 +19,11 @@ import { SupabaseService } from '../../services/supabase.service';
 })
 export class Board {
   readonly projectStore = inject(ProjectStore);
-  readonly swimlanes: SwimlaneModel[] = [{
-    name: 'New',
-    workItems: []
-  },
-  {
-    name: 'In Progress',
-    workItems: []
-  },
-  {
-    name: 'Done',
-    workItems: []
-  }];
+  readonly swimlanes: SwimlaneModel[] = [
+    { name: 'New', workItems: [] },
+    { name: 'In Progress', workItems: [] },
+    { name: 'Done', workItems: [] }
+  ];
   
   private readonly router = inject(Router);
   private readonly supabaseService = inject(SupabaseService);
@@ -45,9 +38,9 @@ export class Board {
       takeUntilDestroyed(),
       filter(([_, loaded]) => loaded)
     ).subscribe(([params, _]) => {
-      const projectId = params['projectId'];
-      this.projectStore.setSelectedProject(+projectId);
-      this.supabaseService.getWorkItemsById(+projectId).subscribe((res) => {
+      const projectId = +params['projectId'];
+      this.projectStore.setSelectedProject(projectId);
+      this.supabaseService.getWorkItemsById(projectId).subscribe((res) => {
         res.map((workItem) => {
           this.swimlanes[workItem.status].workItems.push(workItem);
 
@@ -73,7 +66,6 @@ export class Board {
         event.previousIndex,
         event.currentIndex
       );
-      this.updateOrderAndSave(event.container.data, event.currentIndex);
     } else {
       // Transfer between swimlanes
       transferArrayItem(
@@ -85,8 +77,9 @@ export class Board {
       
       const movedWorkItem = event.container.data.workItems[event.currentIndex];
       movedWorkItem.status = newLaneIndex;
-      this.updateOrderAndSave(event.container.data, event.currentIndex);
     }
+
+    this.updateOrderAndSave(event.container.data, event.currentIndex);
   }
 
   toOverview() {
