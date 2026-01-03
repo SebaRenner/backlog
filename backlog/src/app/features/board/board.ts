@@ -97,8 +97,8 @@ export class Board {
     const items = swimlane.workItems;
     const movedItem = items[movedIndex];
     
-    const prevItem = movedIndex > 0 ? items[movedIndex - 1] : null;
-    const nextItem = movedIndex < items.length - 1 ? items[movedIndex + 1] : null;
+    const prevItem = items[movedIndex - 1];
+    const nextItem = items[movedIndex + 1];
     
     if (!prevItem && !nextItem) {
       // Only item in swimlane
