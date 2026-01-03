@@ -65,7 +65,7 @@ export class Board {
       .filter((_, index) => index !== currentIndex);
   }
 
-  onDrop(event: CdkDragDrop<SwimlaneModel>, newLaneIndex: number) {    
+  onDrop(event: CdkDragDrop<SwimlaneModel>, newLaneIndex: number) {
     if (event.previousContainer === event.container) {
       // Reorder within the same swimlane
       moveItemInArray(
@@ -73,6 +73,7 @@ export class Board {
         event.previousIndex,
         event.currentIndex
       );
+      this.updateOrderAndSave(event.container.data, event.currentIndex);
     } else {
       // Transfer between swimlanes
       transferArrayItem(
@@ -84,12 +85,51 @@ export class Board {
       
       const movedWorkItem = event.container.data.workItems[event.currentIndex];
       movedWorkItem.status = newLaneIndex;
-
-      this.supabaseService.saveWorkItem(movedWorkItem).subscribe();
+      this.updateOrderAndSave(event.container.data, event.currentIndex);
     }
   }
 
   toOverview() {
     this.router.navigate(['']);
+  }
+
+  private updateOrderAndSave(swimlane: SwimlaneModel, movedIndex: number) {
+    const items = swimlane.workItems;
+    const movedItem = items[movedIndex];
+    
+    const prevItem = movedIndex > 0 ? items[movedIndex - 1] : null;
+    const nextItem = movedIndex < items.length - 1 ? items[movedIndex + 1] : null;
+    
+    if (!prevItem && !nextItem) {
+      // Only item in swimlane
+      movedItem.order = 1000;
+    } else if (!prevItem) {
+      // Moving to top
+      movedItem.order = nextItem!.order - 1000;
+    } else if (!nextItem) {
+      // Moving to bottom
+      movedItem.order = prevItem.order + 1000;
+    } else {
+      // Moving between items
+      movedItem.order = prevItem.order + ((nextItem.order - prevItem.order) / 2);
+    }
+    
+    // Check if we need to rebalance
+    if (!Number.isInteger(movedItem.order) || movedItem.order < 0) {
+      this.rebalanceOrders(swimlane);
+      // Save all items after rebalance
+      items.forEach(item => {
+        this.supabaseService.saveWorkItem(item).subscribe();
+      });
+    } else {
+      // Only save the moved item
+      this.supabaseService.saveWorkItem(movedItem).subscribe();
+    }
+  }
+
+  private rebalanceOrders(swimlane: SwimlaneModel) {
+    swimlane.workItems.forEach((item, index) => {
+      item.order = (index + 1) * 1000;
+    });
   }
 }
