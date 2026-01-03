@@ -50,6 +50,10 @@ export class Board {
       this.supabaseService.getWorkItemsById(+projectId).subscribe((res) => {
         res.map((workItem) => {
           this.swimlanes[workItem.status].workItems.push(workItem);
+
+          Object.values(this.swimlanes).forEach(swimlane => {
+            swimlane.workItems.sort((a, b) => a.order - b.order);
+          });
         })
       });
     });
@@ -61,7 +65,7 @@ export class Board {
       .filter((_, index) => index !== currentIndex);
   }
 
-  onDrop(event: CdkDragDrop<SwimlaneModel>, newLaneIndex: number) {
+  onDrop(event: CdkDragDrop<SwimlaneModel>, newLaneIndex: number) {    
     if (event.previousContainer === event.container) {
       // Reorder within the same swimlane
       moveItemInArray(

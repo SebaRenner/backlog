@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { environment } from "../environments/environment";
 import { from, map, Observable } from "rxjs";
 import { WorkItem } from "../models/board.model";
@@ -28,6 +28,7 @@ export class SupabaseService {
                 .from('workitems')
                 .select('*')
                 .eq('project_id', projectId)
+                .order('order', { ascending: true })
         ).pipe(
             map(({ data, error }) => {
                 if (error) throw error;
