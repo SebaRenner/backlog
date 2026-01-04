@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { SwimlaneModel } from '../../models/board.model';
+import { SwimlaneModel, WorkItem } from '../../models/board.model';
 import { WorkItemDisplay } from '../work-item-display/work-item-display';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -14,6 +14,7 @@ export class Swimlane {
     laneId = input.required<string>();
     connectedTo = input<string[]>([]);
     drop = output<CdkDragDrop<SwimlaneModel>>();
+    deleteItem = output<WorkItem>();
 
     onDrop(event: CdkDragDrop<SwimlaneModel>) {
       this.drop.emit(event);

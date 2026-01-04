@@ -24,7 +24,8 @@
           [lane]="lane" 
           [laneId]="'lane-' + $index"
           [connectedTo]="getConnectedLanes($index)"
-          (drop)="onDrop($event, $index)">
+          (drop)="onDrop($event, $index)"
+          (deleteItem)="deleteWorkItem($event)">
         </app-swimlane>
       }
     </div>

@@ -5,10 +5,18 @@
 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
     padding: 6px 6px 6px 10px;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
 }
 
 .work-item:hover {
     cursor: pointer;
+}
+
+.work-item button {
+    align-self: center;
 }
 
 .title {

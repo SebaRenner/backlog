@@ -5,7 +5,7 @@ import { ProjectStore } from '../../store/project.store';
 import { Swimlane } from '../../components/swimlane/swimlane';
 import { combineLatest, filter, take } from 'rxjs';
 import { Spinner } from '../../components/spinner/spinner';
-import { SwimlaneModel } from '../../models/board.model';
+import { SwimlaneModel, WorkItem } from '../../models/board.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -98,6 +98,12 @@ export class Board {
           this.swimlanes[workItem.status].workItems.push(workItem);
         })
       }
+    });
+  }
+
+  deleteWorkItem(workItem: WorkItem) {
+    this.supabaseService.deleteWorkItem(workItem).subscribe(() => {
+      this.swimlanes[workItem.status].workItems = this.swimlanes[workItem.status].workItems.filter(item => item.id !== workItem.id);
     });
   }
 

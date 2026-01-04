@@ -79,4 +79,18 @@ export class SupabaseService {
             map(items => items[0])
         );
     }
+
+    deleteWorkItem(workItem: WorkItem): Observable<void> {
+        return from(
+            this.client
+                .from('workitems')
+                .delete()
+                .eq('id', workItem.id)
+        ).pipe(
+            map(({ error }) => {
+                if (error) throw error;
+                return;
+            })
+        );
+    }
 }
