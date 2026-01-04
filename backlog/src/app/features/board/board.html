@@ -5,12 +5,18 @@
   <div class="board">
     <div class="header">
       <h1>{{ project.name }}</h1>
-      <button matFab extended 
-        class="back-button" 
-        (click)="toOverview()">
-        <mat-icon>folder</mat-icon>
-        Back to Overview
-      </button>
+      <div class="actions">
+        <button matFab extended 
+          (click)="openDialog()">
+          <mat-icon>assignment_add</mat-icon>
+          New work item
+        </button>
+        <button matFab extended 
+          (click)="toOverview()">
+          <mat-icon>folder</mat-icon>
+          Back to Overview
+        </button>
+      </div>
     </div>
     <div class="swimlanes">
       @for (lane of swimlanes; track $index) {

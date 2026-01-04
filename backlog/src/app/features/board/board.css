@@ -5,8 +5,10 @@
 .header {
     display: flex;
 
-    .back-button {
+    .actions {
         margin-left: auto;
+        display: flex;
+        gap: 1rem;
     }
 }
 

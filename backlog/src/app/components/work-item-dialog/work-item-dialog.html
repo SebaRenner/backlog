@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Create new work item</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title"/>
+      <mat-error>A title is required</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Work Item Type</mat-label>
+      <mat-select formControlName="type">
+          @for (option of typeOptions; track $index) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton mat-dialog-close>Cancel</button>
+  <button matButton [mat-dialog-close]="form.value" [disabled]="!form.valid">Create</button>
+</mat-dialog-actions>

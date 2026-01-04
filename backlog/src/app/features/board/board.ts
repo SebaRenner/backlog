@@ -10,6 +10,8 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SupabaseService } from '../../services/supabase.service';
+import { MatDialog } from '@angular/material/dialog';
+import { WorkItemDialog, WorkItemDialogData } from '../../components/work-item-dialog/work-item-dialog';
 
 @Component({
   selector: 'app-board',
@@ -27,6 +29,7 @@ export class Board {
   
   private readonly router = inject(Router);
   private readonly supabaseService = inject(SupabaseService);
+  private readonly dialog = inject(MatDialog);
 
   constructor(route: ActivatedRoute) {
     this.projectStore.loadProjects();
@@ -80,6 +83,17 @@ export class Board {
     }
 
     this.updateOrderAndSave(event.container.data, event.currentIndex);
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open<WorkItemDialog, void, WorkItemDialogData>(WorkItemDialog)
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Save to DB etc.
+        console.log(result);
+      }
+    });
   }
 
   toOverview() {
