@@ -12,6 +12,8 @@ export interface WorkItem {
     order: number;
 }
 
+export type WorkItemCreate = Omit<WorkItem, 'id'>;
+
 export enum WorkItemType {
     Bug,
     Feature,

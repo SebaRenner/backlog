@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ProjectStore } from '../../store/project.store';
 import { Swimlane } from '../../components/swimlane/swimlane';
-import { combineLatest, filter } from 'rxjs';
+import { combineLatest, filter, take } from 'rxjs';
 import { Spinner } from '../../components/spinner/spinner';
 import { SwimlaneModel } from '../../models/board.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -30,6 +30,9 @@ export class Board {
   private readonly router = inject(Router);
   private readonly supabaseService = inject(SupabaseService);
   private readonly dialog = inject(MatDialog);
+  private readonly DEFAULT_ORDER = 1000;
+
+  private projectId?: number;
 
   constructor(route: ActivatedRoute) {
     this.projectStore.loadProjects();
@@ -41,9 +44,9 @@ export class Board {
       takeUntilDestroyed(),
       filter(([_, loaded]) => loaded)
     ).subscribe(([params, _]) => {
-      const projectId = +params['projectId'];
-      this.projectStore.setSelectedProject(projectId);
-      this.supabaseService.getWorkItemsById(projectId).subscribe((res) => {
+      this.projectId = +params['projectId'];
+      this.projectStore.setSelectedProject(this.projectId);
+      this.supabaseService.getWorkItemsById(this.projectId).subscribe((res) => {
         res.map((workItem) => {
           this.swimlanes[workItem.status].workItems.push(workItem);
 
@@ -89,9 +92,11 @@ export class Board {
     const dialogRef = this.dialog.open<WorkItemDialog, void, WorkItemDialogData>(WorkItemDialog)
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // Save to DB etc.
-        console.log(result);
+      if (result && this.projectId) {
+        const order = this.getNextOrder(this.swimlanes[0]);
+        this.supabaseService.createWorkItem(result.title, result.type, this.projectId, order).pipe(take(1)).subscribe((workItem) => {
+          this.swimlanes[workItem.status].workItems.push(workItem);
+        })
       }
     });
   }
@@ -109,13 +114,13 @@ export class Board {
     
     if (!prevItem && !nextItem) {
       // Only item in swimlane
-      movedItem.order = 1000;
+      movedItem.order = this.DEFAULT_ORDER;
     } else if (!prevItem) {
       // Moving to top
-      movedItem.order = nextItem!.order - 1000;
+      movedItem.order = nextItem!.order - this.DEFAULT_ORDER;
     } else if (!nextItem) {
       // Moving to bottom
-      movedItem.order = prevItem.order + 1000;
+      movedItem.order = prevItem.order + this.DEFAULT_ORDER;
     } else {
       // Moving between items
       movedItem.order = prevItem.order + ((nextItem.order - prevItem.order) / 2);
@@ -126,17 +131,25 @@ export class Board {
       this.rebalanceOrders(swimlane);
       // Save all items after rebalance
       items.forEach(item => {
-        this.supabaseService.saveWorkItem(item).subscribe();
+        this.supabaseService.updateWorkItem(item).subscribe();
       });
     } else {
       // Only save the moved item
-      this.supabaseService.saveWorkItem(movedItem).subscribe();
+      this.supabaseService.updateWorkItem(movedItem).subscribe();
     }
   }
 
   private rebalanceOrders(swimlane: SwimlaneModel) {
     swimlane.workItems.forEach((item, index) => {
-      item.order = (index + 1) * 1000;
+      item.order = (index + 1) * this.DEFAULT_ORDER;
     });
+  }
+
+  private getNextOrder(swimlane: SwimlaneModel): number {
+    const items = swimlane.workItems;
+    if (items.length > 0) {
+      return Math.max(...items.map(i => i.order)) + this.DEFAULT_ORDER;
+    }
+    return this.DEFAULT_ORDER;
   }
 }
