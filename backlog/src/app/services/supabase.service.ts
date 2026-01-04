@@ -59,18 +59,24 @@ export class SupabaseService {
             );
     }   
 
-    updateWorkItem(workItem: WorkItem): Observable<WorkItem> {
+    updateWorkItems(workItems: WorkItem[]): Observable<WorkItem[]> {
         return from(
             this.client
                 .from('workitems')
-                .upsert(workItem)
+                .upsert(workItems)
                 .select()
-                .single()
         ).pipe(
             map(({ data, error }) => {
                 if (error) throw error;
                 return data;
             })
+        );
+    }
+
+    // Convienience wrapper, nothing more
+    updateWorkItem(workItem: WorkItem): Observable<WorkItem> {
+        return this.updateWorkItems([workItem]).pipe(
+            map(items => items[0])
         );
     }
 }

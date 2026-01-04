@@ -130,9 +130,7 @@ export class Board {
     if (!Number.isInteger(movedItem.order) || movedItem.order < 0) {
       this.rebalanceOrders(swimlane);
       // Save all items after rebalance
-      items.forEach(item => {
-        this.supabaseService.updateWorkItem(item).subscribe();
-      });
+      this.supabaseService.updateWorkItems(items).subscribe();
     } else {
       // Only save the moved item
       this.supabaseService.updateWorkItem(movedItem).subscribe();
