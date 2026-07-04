@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="swimlanes">
-      @for (lane of swimlanes; track $index) {
+      @for (lane of swimlanes(); track $index) {
         <app-swimlane 
           [lane]="lane" 
           [laneId]="'lane-' + $index"
