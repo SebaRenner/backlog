@@ -58,7 +58,7 @@ importers:
         specifier: 29.1.1
         version: 29.1.1(@noble/hashes@1.8.0)
       oxfmt:
-        specifier: ^0.57.0
+        specifier: 0.57.0
         version: 0.57.0
       oxlint:
         specifier: 1.72.0
