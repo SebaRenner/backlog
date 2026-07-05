@@ -32,8 +32,6 @@ jobs:
           cat << EOF > src/app/environments/environment.production.ts
           export const environment = {
             production: true,
-            githubToken: '${{ secrets.GHP_TOKEN }}',
-            appPassword: '${{ secrets.APP_PASSWORD }}',
             supabaseUrl: '${{ secrets.SUPABASE_URL }}',
             supabaseKey: '${{ secrets.SUPABASE_KEY }}'
           };

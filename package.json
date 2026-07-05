@@ -16,7 +16,8 @@
     "db:link": "supabase link",
     "db:new": "supabase migration new",
     "db:push": "supabase db push",
-    "db:reset": "supabase db reset --linked"
+    "db:reset": "supabase db reset --linked",
+    "fn:deploy": "supabase functions deploy backlog-api"
   },
   "private": true,
   "dependencies": {

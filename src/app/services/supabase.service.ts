@@ -6,16 +6,20 @@ import { WorkItem, WorkItemCreate, WorkItemType } from '../models/board.model';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
-  private client: SupabaseClient;
+  private _client: SupabaseClient;
 
   constructor() {
-    this.client = createClient(environment.supabaseUrl, environment.supabaseKey, {
+    this._client = createClient(environment.supabaseUrl, environment.supabaseKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: false, // TODO: Find a solution where this can be set to true
         detectSessionInUrl: true,
       },
     });
+  }
+
+  get client(): SupabaseClient {
+    return this._client;
   }
 
   getWorkItemsById(projectId: number): Observable<WorkItem[]> {
