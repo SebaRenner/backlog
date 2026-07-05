@@ -9,5 +9,5 @@ import { GitHubRepository } from '../../models/github.model';
   styleUrl: './project-card.css',
 })
 export class ProjectCard {
-  project = input.required<GitHubRepository>()
+  project = input.required<GitHubRepository>();
 }

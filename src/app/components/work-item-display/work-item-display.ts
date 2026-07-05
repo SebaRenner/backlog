@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { WorkItem, WorkItemType } from '../../models/board.model';
-import { MatButtonModule } from "@angular/material/button";
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({

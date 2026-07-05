@@ -1,33 +1,33 @@
 .work-item {
-    border: 1px solid black;
-    border-radius: 4px;
-    height: 48px;
+  border: 1px solid black;
+  border-radius: 4px;
+  height: 48px;
 
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-    padding: 6px 6px 6px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  padding: 6px 6px 6px 10px;
 
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
 }
 
 .work-item:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .work-item button {
-    align-self: center;
+  align-self: center;
 }
 
 .title {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .feature {
-    background-color: lightblue;
+  background-color: lightblue;
 }
 
 .bug {
-    background-color: red;
-    color: white;
+  background-color: red;
+  color: white;
 }

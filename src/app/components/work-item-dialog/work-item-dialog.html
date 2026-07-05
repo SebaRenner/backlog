@@ -3,15 +3,15 @@
   <form [formGroup]="form">
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput formControlName="title"/>
+      <input matInput formControlName="title" />
       <mat-error>A title is required</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Work Item Type</mat-label>
       <mat-select formControlName="type">
-          @for (option of typeOptions; track $index) {
-              <mat-option [value]="option.value">{{ option.label }}</mat-option>
-          }
+        @for (option of typeOptions; track $index) {
+        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </form>

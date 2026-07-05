@@ -13,14 +13,13 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './project-overview.html',
   styleUrl: './project-overview.css',
 })
-export class ProjectOverview {  
+export class ProjectOverview {
   private readonly router = inject(Router);
   private readonly projectStore = inject(ProjectStore);
   private readonly loginStore = inject(LoginStore);
-  
-  projects = computed(() => 
-    [...this.projectStore.projects()]
-      .sort((a, b) => b.updated_at > a.updated_at ? 1 : -1)
+
+  projects = computed(() =>
+    [...this.projectStore.projects()].sort((a, b) => (b.updated_at > a.updated_at ? 1 : -1)),
   );
 
   constructor() {

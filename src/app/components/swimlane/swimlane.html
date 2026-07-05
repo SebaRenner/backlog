@@ -1,11 +1,17 @@
 <h3>{{ lane().name }}</h3>
-<div class="swimlane" 
-     [id]="laneId()"
-     cdkDropList
-     [cdkDropListData]="lane()"
-     [cdkDropListConnectedTo]="connectedTo()"
-     (cdkDropListDropped)="onDrop($event)">
-    @for (item of lane().workItems; track $index) {
-        <app-work-item-display [item]="item" (deleteItem)="deleteItem.emit($event)" cdkDrag></app-work-item-display>
-    }
+<div
+  class="swimlane"
+  [id]="laneId()"
+  cdkDropList
+  [cdkDropListData]="lane()"
+  [cdkDropListConnectedTo]="connectedTo()"
+  (cdkDropListDropped)="onDrop($event)"
+>
+  @for (item of lane().workItems; track $index) {
+  <app-work-item-display
+    [item]="item"
+    (deleteItem)="deleteItem.emit($event)"
+    cdkDrag
+  ></app-work-item-display>
+  }
 </div>

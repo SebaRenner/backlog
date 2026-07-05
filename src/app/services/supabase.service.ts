@@ -1,96 +1,79 @@
-import { Injectable } from "@angular/core";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { environment } from "../environments/environment";
-import { from, map, Observable } from "rxjs";
-import { WorkItem, WorkItemCreate, WorkItemType } from "../models/board.model";
+import { Injectable } from '@angular/core';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from '../environments/environment';
+import { from, map, Observable } from 'rxjs';
+import { WorkItem, WorkItemCreate, WorkItemType } from '../models/board.model';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
-    private client: SupabaseClient;
+  private client: SupabaseClient;
 
-    constructor() {
-        this.client = createClient(
-            environment.supabaseUrl, 
-            environment.supabaseKey,
-            {
-                auth: {
-                    persistSession: true,
-                    autoRefreshToken: false, // TODO: Find a solution where this can be set to true
-                    detectSessionInUrl: true,
-                }
-            }
-        );
-    }
+  constructor() {
+    this.client = createClient(environment.supabaseUrl, environment.supabaseKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: false, // TODO: Find a solution where this can be set to true
+        detectSessionInUrl: true,
+      },
+    });
+  }
 
-    getWorkItemsById(projectId: number): Observable<WorkItem[]> {
-        return from(
-            this.client
-                .from('workitems')
-                .select('*')
-                .eq('project_id', projectId)
-                .order('order', { ascending: true })
-        ).pipe(
-            map(({ data, error }) => {
-                if (error) throw error;
-                return data || [];
-            })
-        );
-    }
+  getWorkItemsById(projectId: number): Observable<WorkItem[]> {
+    return from(
+      this.client
+        .from('workitems')
+        .select('*')
+        .eq('project_id', projectId)
+        .order('order', { ascending: true }),
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return data || [];
+      }),
+    );
+  }
 
-    createWorkItem(title: string, type: WorkItemType, projectId: number, order: number): Observable<WorkItem> {
-        const workItem: WorkItemCreate = {
-            title,
-            project_id: projectId,
-            order,
-            status: 0,
-            type
-        }
-        return from(
-            this.client
-                .from('workitems')
-                .insert(workItem)
-                .select()
-                .single()
-            ).pipe(
-                map(({ data, error }) => {
-                    if (error) throw error;
-                    return data;
-                })
-            );
-    }   
+  createWorkItem(
+    title: string,
+    type: WorkItemType,
+    projectId: number,
+    order: number,
+  ): Observable<WorkItem> {
+    const workItem: WorkItemCreate = {
+      title,
+      project_id: projectId,
+      order,
+      status: 0,
+      type,
+    };
+    return from(this.client.from('workitems').insert(workItem).select().single()).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return data;
+      }),
+    );
+  }
 
-    updateWorkItems(workItems: WorkItem[]): Observable<WorkItem[]> {
-        return from(
-            this.client
-                .from('workitems')
-                .upsert(workItems)
-                .select()
-        ).pipe(
-            map(({ data, error }) => {
-                if (error) throw error;
-                return data;
-            })
-        );
-    }
+  updateWorkItems(workItems: WorkItem[]): Observable<WorkItem[]> {
+    return from(this.client.from('workitems').upsert(workItems).select()).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return data;
+      }),
+    );
+  }
 
-    // Convienience wrapper, nothing more
-    updateWorkItem(workItem: WorkItem): Observable<WorkItem> {
-        return this.updateWorkItems([workItem]).pipe(
-            map(items => items[0])
-        );
-    }
+  // Convienience wrapper, nothing more
+  updateWorkItem(workItem: WorkItem): Observable<WorkItem> {
+    return this.updateWorkItems([workItem]).pipe(map((items) => items[0]));
+  }
 
-    deleteWorkItem(workItem: WorkItem): Observable<void> {
-        return from(
-            this.client
-                .from('workitems')
-                .delete()
-                .eq('id', workItem.id)
-        ).pipe(
-            map(({ error }) => {
-                if (error) throw error;
-                return;
-            })
-        );
-    }
+  deleteWorkItem(workItem: WorkItem): Observable<void> {
+    return from(this.client.from('workitems').delete().eq('id', workItem.id)).pipe(
+      map(({ error }) => {
+        if (error) throw error;
+        return;
+      }),
+    );
+  }
 }

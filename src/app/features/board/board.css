@@ -1,19 +1,19 @@
 .board {
-    padding: 20px;
+  padding: 20px;
 }
 
 .header {
-    display: flex;
+  display: flex;
 
-    .actions {
-        margin-left: auto;
-        display: flex;
-        gap: 1rem;
-    }
+  .actions {
+    margin-left: auto;
+    display: flex;
+    gap: 1rem;
+  }
 }
 
 .swimlanes {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 1rem;
 }

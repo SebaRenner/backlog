@@ -5,18 +5,18 @@ import { Login } from './features/login/login';
 import { loginGuard } from './guards/login-guard';
 
 export const routes: Routes = [
-    {
-        path: '',
-        component: ProjectOverview,
-        canActivate: [loginGuard]
-    },
-    {
-        path: 'board/:projectId',
-        component: Board,
-        canActivate: [loginGuard]
-    },
-    {
-        path: 'login',
-        component: Login
-    }
+  {
+    path: '',
+    component: ProjectOverview,
+    canActivate: [loginGuard],
+  },
+  {
+    path: 'board/:projectId',
+    component: Board,
+    canActivate: [loginGuard],
+  },
+  {
+    path: 'login',
+    component: Login,
+  },
 ];

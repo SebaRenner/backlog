@@ -10,13 +10,13 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
   styleUrl: './swimlane.css',
 })
 export class Swimlane {
-    lane = input.required<SwimlaneModel>();
-    laneId = input.required<string>();
-    connectedTo = input<string[]>([]);
-    drop = output<CdkDragDrop<SwimlaneModel>>();
-    deleteItem = output<WorkItem>();
+  lane = input.required<SwimlaneModel>();
+  laneId = input.required<string>();
+  connectedTo = input<string[]>([]);
+  drop = output<CdkDragDrop<SwimlaneModel>>();
+  deleteItem = output<WorkItem>();
 
-    onDrop(event: CdkDragDrop<SwimlaneModel>) {
-      this.drop.emit(event);
-    }
+  onDrop(event: CdkDragDrop<SwimlaneModel>) {
+    this.drop.emit(event);
+  }
 }

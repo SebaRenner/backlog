@@ -7,5 +7,5 @@ import { Component, input } from '@angular/core';
   styleUrl: './spinner.css',
 })
 export class Spinner {
-  text = input<string>("Loading...");
+  text = input<string>('Loading...');
 }

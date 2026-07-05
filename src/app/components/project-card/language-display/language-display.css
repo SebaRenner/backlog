@@ -1,12 +1,12 @@
 :host {
-    display: grid;
-    grid-template-columns: 0.5fr 9.5fr;
-    grid-template-rows: 1fr;
+  display: grid;
+  grid-template-columns: 0.5fr 9.5fr;
+  grid-template-rows: 1fr;
 }
 
 .dot {
-    height: 8px;
-    width: 8px;
-    border-radius: 100%;
-    align-self: center;
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  align-self: center;
 }

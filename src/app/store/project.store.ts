@@ -1,10 +1,10 @@
-import { inject } from "@angular/core";
-import { GitHubRepository } from "../models/github.model";
-import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
-import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import { pipe, switchMap, tap, catchError, filter, EMPTY } from "rxjs";
-import { GitHubService } from "../services/github.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { inject } from '@angular/core';
+import { GitHubRepository } from '../models/github.model';
+import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { pipe, switchMap, tap, catchError, filter, EMPTY } from 'rxjs';
+import { GitHubService } from '../services/github.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type ProjectState = {
   projects: GitHubRepository[];
@@ -25,11 +25,11 @@ export const ProjectStore = signalStore(
   withState(initialState),
   withMethods((store, githubService = inject(GitHubService), snackBar = inject(MatSnackBar)) => ({
     setSelectedProject(projectId: number) {
-      patchState(store, { 
-        selectedProject: store.projects().find(p => p.id === projectId) 
+      patchState(store, {
+        selectedProject: store.projects().find((p) => p.id === projectId),
       });
     },
-    
+
     loadProjects: rxMethod<void>(
       pipe(
         filter(() => !store.loaded() && !store.loading()),
@@ -37,25 +37,25 @@ export const ProjectStore = signalStore(
         switchMap(() =>
           githubService.getAllRepos().pipe(
             tap((repos) => {
-              patchState(store, { 
-                projects: repos, 
-                loaded: true, 
-                loading: false 
+              patchState(store, {
+                projects: repos,
+                loaded: true,
+                loading: false,
               });
             }),
             catchError((err) => {
               snackBar.open(
                 'Github API call failed. Did you configure the PAT Token? 👀',
                 'Close',
-                { duration: 8000 }
+                { duration: 8000 },
               );
               console.error('GitHub error:', err);
               patchState(store, { loading: false });
               return EMPTY;
-            })
-          )
-        )
-      )
-    )
-  }))
+            }),
+          ),
+        ),
+      ),
+    ),
+  })),
 );

@@ -1,15 +1,20 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+import {
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { WorkItemType } from '../../models/board.model';
 import { MatSelectModule } from '@angular/material/select';
 
 export interface WorkItemDialogData {
-  title: string; 
-  type: WorkItemType
+  title: string;
+  type: WorkItemType;
 }
 
 @Component({
@@ -23,7 +28,7 @@ export interface WorkItemDialogData {
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
-    MatDialogClose
+    MatDialogClose,
   ],
   templateUrl: './work-item-dialog.html',
   styleUrl: './work-item-dialog.css',
@@ -38,6 +43,6 @@ export class WorkItemDialog {
 
   readonly form = this.fb.group({
     title: ['', [Validators.required]],
-    type: [WorkItemType.Feature, Validators.required]
+    type: [WorkItemType.Feature, Validators.required],
   });
 }

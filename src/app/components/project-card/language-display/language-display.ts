@@ -10,7 +10,9 @@ export class LanguageDisplay {
   language = input.required<string>();
 
   textToColor(text: string): string {
-    let r = 0, g = 0, b = 0;
+    let r = 0,
+      g = 0,
+      b = 0;
 
     for (let i = 0; i < text.length; i++) {
       const charCode = text.charCodeAt(i);

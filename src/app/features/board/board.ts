@@ -11,7 +11,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SupabaseService } from '../../services/supabase.service';
 import { MatDialog } from '@angular/material/dialog';
-import { WorkItemDialog, WorkItemDialogData } from '../../components/work-item-dialog/work-item-dialog';
+import {
+  WorkItemDialog,
+  WorkItemDialogData,
+} from '../../components/work-item-dialog/work-item-dialog';
 
 @Component({
   selector: 'app-board',
@@ -24,9 +27,9 @@ export class Board {
   readonly swimlanes = signal<SwimlaneModel[]>([
     { name: 'New', workItems: [] },
     { name: 'In Progress', workItems: [] },
-    { name: 'Done', workItems: [] }
+    { name: 'Done', workItems: [] },
   ]);
-  
+
   private readonly router = inject(Router);
   private readonly supabaseService = inject(SupabaseService);
   private readonly dialog = inject(MatDialog);
@@ -37,24 +40,23 @@ export class Board {
   constructor(route: ActivatedRoute) {
     this.projectStore.loadProjects();
 
-    combineLatest([
-      route.params,
-      toObservable(this.projectStore.loaded)
-    ]).pipe(
-      takeUntilDestroyed(),
-      filter(([_, loaded]) => loaded)
-    ).subscribe(([params, _]) => {
-      this.projectId = +params['projectId'];
-      this.projectStore.setSelectedProject(this.projectId);
-      this.supabaseService.getWorkItemsById(this.projectId).subscribe((res) => {
-        this.swimlanes.update(lanes => {
-          const newLanes = lanes.map(lane => ({ ...lane, workItems: [] as WorkItem[] }));
-          res.forEach(workItem => newLanes[workItem.status].workItems.push(workItem));
-          newLanes.forEach(lane => lane.workItems.sort((a, b) => a.order - b.order));
-          return newLanes;
+    combineLatest([route.params, toObservable(this.projectStore.loaded)])
+      .pipe(
+        takeUntilDestroyed(),
+        filter(([_, loaded]) => loaded),
+      )
+      .subscribe(([params, _]) => {
+        this.projectId = +params['projectId'];
+        this.projectStore.setSelectedProject(this.projectId);
+        this.supabaseService.getWorkItemsById(this.projectId).subscribe((res) => {
+          this.swimlanes.update((lanes) => {
+            const newLanes = lanes.map((lane) => ({ ...lane, workItems: [] as WorkItem[] }));
+            res.forEach((workItem) => newLanes[workItem.status].workItems.push(workItem));
+            newLanes.forEach((lane) => lane.workItems.sort((a, b) => a.order - b.order));
+            return newLanes;
+          });
         });
       });
-    });
   }
 
   getConnectedLanes(currentIndex: number): string[] {
@@ -66,49 +68,54 @@ export class Board {
   onDrop(event: CdkDragDrop<SwimlaneModel>, newLaneIndex: number) {
     if (event.previousContainer === event.container) {
       // Reorder within the same swimlane
-      moveItemInArray(
-        event.container.data.workItems,
-        event.previousIndex,
-        event.currentIndex
-      );
+      moveItemInArray(event.container.data.workItems, event.previousIndex, event.currentIndex);
     } else {
       // Transfer between swimlanes
       transferArrayItem(
         event.previousContainer.data.workItems,
         event.container.data.workItems,
         event.previousIndex,
-        event.currentIndex
+        event.currentIndex,
       );
 
       const movedWorkItem = event.container.data.workItems[event.currentIndex];
       movedWorkItem.status = newLaneIndex;
     }
-    
+
     this.updateOrderAndSave(event.container.data, event.currentIndex);
   }
 
   openDialog() {
-    const dialogRef = this.dialog.open<WorkItemDialog, void, WorkItemDialogData>(WorkItemDialog)
+    const dialogRef = this.dialog.open<WorkItemDialog, void, WorkItemDialogData>(WorkItemDialog);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result && this.projectId) {
         const order = this.getNextOrder(this.swimlanes()[0]);
-        this.supabaseService.createWorkItem(result.title, result.type, this.projectId, order).pipe(take(1)).subscribe((workItem) => {
-          this.swimlanes.update(lanes => {
-            const newLanes = [...lanes];
-            newLanes[workItem.status] = { ...newLanes[workItem.status], workItems: [...newLanes[workItem.status].workItems, workItem] };
-            return newLanes;
+        this.supabaseService
+          .createWorkItem(result.title, result.type, this.projectId, order)
+          .pipe(take(1))
+          .subscribe((workItem) => {
+            this.swimlanes.update((lanes) => {
+              const newLanes = [...lanes];
+              newLanes[workItem.status] = {
+                ...newLanes[workItem.status],
+                workItems: [...newLanes[workItem.status].workItems, workItem],
+              };
+              return newLanes;
+            });
           });
-        })
       }
     });
   }
 
   deleteWorkItem(workItem: WorkItem) {
     this.supabaseService.deleteWorkItem(workItem).subscribe(() => {
-      this.swimlanes.update(lanes => {
+      this.swimlanes.update((lanes) => {
         const newLanes = [...lanes];
-        newLanes[workItem.status] = { ...newLanes[workItem.status], workItems: newLanes[workItem.status].workItems.filter(item => item.id !== workItem.id) };
+        newLanes[workItem.status] = {
+          ...newLanes[workItem.status],
+          workItems: newLanes[workItem.status].workItems.filter((item) => item.id !== workItem.id),
+        };
         return newLanes;
       });
     });
@@ -121,10 +128,10 @@ export class Board {
   private updateOrderAndSave(swimlane: SwimlaneModel, movedIndex: number) {
     const items = swimlane.workItems;
     const movedItem = items[movedIndex];
-    
+
     const prevItem = items[movedIndex - 1];
     const nextItem = items[movedIndex + 1];
-    
+
     if (!prevItem && !nextItem) {
       // Only item in swimlane
       movedItem.order = this.DEFAULT_ORDER;
@@ -136,9 +143,9 @@ export class Board {
       movedItem.order = prevItem.order + this.DEFAULT_ORDER;
     } else {
       // Moving between items
-      movedItem.order = prevItem.order + ((nextItem.order - prevItem.order) / 2);
+      movedItem.order = prevItem.order + (nextItem.order - prevItem.order) / 2;
     }
-    
+
     // Check if we need to rebalance
     if (!Number.isInteger(movedItem.order) || movedItem.order < 0) {
       this.rebalanceOrders(swimlane);
@@ -159,7 +166,7 @@ export class Board {
   private getNextOrder(swimlane: SwimlaneModel): number {
     const items = swimlane.workItems;
     if (items.length > 0) {
-      return Math.max(...items.map(i => i.order)) + this.DEFAULT_ORDER;
+      return Math.max(...items.map((i) => i.order)) + this.DEFAULT_ORDER;
     }
     return this.DEFAULT_ORDER;
   }
