@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ProjectStore } from '../../store/project.store';
@@ -21,11 +21,11 @@ import { WorkItemDialog, WorkItemDialogData } from '../../components/work-item-d
 })
 export class Board {
   readonly projectStore = inject(ProjectStore);
-  readonly swimlanes: SwimlaneModel[] = [
+  readonly swimlanes = signal<SwimlaneModel[]>([
     { name: 'New', workItems: [] },
     { name: 'In Progress', workItems: [] },
     { name: 'Done', workItems: [] }
-  ];
+  ]);
   
   private readonly router = inject(Router);
   private readonly supabaseService = inject(SupabaseService);
@@ -47,19 +47,18 @@ export class Board {
       this.projectId = +params['projectId'];
       this.projectStore.setSelectedProject(this.projectId);
       this.supabaseService.getWorkItemsById(this.projectId).subscribe((res) => {
-        res.map((workItem) => {
-          this.swimlanes[workItem.status].workItems.push(workItem);
-
-          Object.values(this.swimlanes).forEach(swimlane => {
-            swimlane.workItems.sort((a, b) => a.order - b.order);
-          });
-        })
+        this.swimlanes.update(lanes => {
+          const newLanes = lanes.map(lane => ({ ...lane, workItems: [] as WorkItem[] }));
+          res.forEach(workItem => newLanes[workItem.status].workItems.push(workItem));
+          newLanes.forEach(lane => lane.workItems.sort((a, b) => a.order - b.order));
+          return newLanes;
+        });
       });
     });
   }
 
   getConnectedLanes(currentIndex: number): string[] {
-    return this.swimlanes
+    return this.swimlanes()
       .map((_, index) => `lane-${index}`)
       .filter((_, index) => index !== currentIndex);
   }
@@ -80,11 +79,11 @@ export class Board {
         event.previousIndex,
         event.currentIndex
       );
-      
+
       const movedWorkItem = event.container.data.workItems[event.currentIndex];
       movedWorkItem.status = newLaneIndex;
     }
-
+    
     this.updateOrderAndSave(event.container.data, event.currentIndex);
   }
 
@@ -93,9 +92,13 @@ export class Board {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && this.projectId) {
-        const order = this.getNextOrder(this.swimlanes[0]);
+        const order = this.getNextOrder(this.swimlanes()[0]);
         this.supabaseService.createWorkItem(result.title, result.type, this.projectId, order).pipe(take(1)).subscribe((workItem) => {
-          this.swimlanes[workItem.status].workItems.push(workItem);
+          this.swimlanes.update(lanes => {
+            const newLanes = [...lanes];
+            newLanes[workItem.status] = { ...newLanes[workItem.status], workItems: [...newLanes[workItem.status].workItems, workItem] };
+            return newLanes;
+          });
         })
       }
     });
@@ -103,7 +106,11 @@ export class Board {
 
   deleteWorkItem(workItem: WorkItem) {
     this.supabaseService.deleteWorkItem(workItem).subscribe(() => {
-      this.swimlanes[workItem.status].workItems = this.swimlanes[workItem.status].workItems.filter(item => item.id !== workItem.id);
+      this.swimlanes.update(lanes => {
+        const newLanes = [...lanes];
+        newLanes[workItem.status] = { ...newLanes[workItem.status], workItems: newLanes[workItem.status].workItems.filter(item => item.id !== workItem.id) };
+        return newLanes;
+      });
     });
   }
 
