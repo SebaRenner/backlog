@@ -27,6 +27,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Write production environment
+        run: |
+          cat << EOF > src/app/environments/environment.production.ts
+          export const environment = {
+            production: true,
+            githubToken: '${{ secrets.GHP_TOKEN }}',
+            appPassword: '${{ secrets.APP_PASSWORD }}',
+            supabaseUrl: '${{ secrets.SUPABASE_URL }}',
+            supabaseKey: '${{ secrets.SUPABASE_KEY }}'
+          };
+          EOF
+
       - name: Build
         run: pnpm run build --base-href "https://SebaRenner.github.io/backlog/"
 
