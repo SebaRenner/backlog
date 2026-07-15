@@ -38,7 +38,7 @@ jobs:
           EOF
 
       - name: Build
-        run: pnpm run build --base-href "https://SebaRenner.github.io/backlog/"
+        run: pnpm run build:prod --base-href "https://SebaRenner.github.io/backlog/"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
