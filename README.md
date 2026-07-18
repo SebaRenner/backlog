@@ -1,5 +1,5 @@
 # Backlog
-
+An Angular web app for tracking open tasks on a Kanban-style Board for all my private and public GitHub projects. Using GithUb API to retrieve metadata about your projects and Supabase for storing the work items and their status.
 
 ## Setup Guide
 1. Create a new [Supabase](https://supabase.com/dashboard) project. Enable "Enable Data API" and "Automatically expose new tables".
