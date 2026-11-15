@@ -12,7 +12,7 @@ export class SupabaseService {
     this._client = createClient(environment.supabaseUrl, environment.supabaseKey, {
       auth: {
         persistSession: true,
-        autoRefreshToken: false, // TODO: Find a solution where this can be set to true
+        autoRefreshToken: true,
         detectSessionInUrl: true,
       },
     });
